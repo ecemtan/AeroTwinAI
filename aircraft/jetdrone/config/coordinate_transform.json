@@ -1,0 +1,48 @@
+{
+    "source": "CATIA",
+    "target": "OpenVSP",
+    "source_units": "mm",
+    "target_units": "m",
+    "transform_matrix": [
+        [
+            0.0,
+            0.0,
+            -1.0
+        ],
+        [
+            -1.0,
+            0.0,
+            0.0
+        ],
+        [
+            0.0,
+            1.0,
+            0.0
+        ]
+    ],
+    "determinant": 1.0,
+    "translation_applied": false,
+    "assumptions": {
+        "catia_positive_y_is_up": true,
+        "catia_positive_z_is_nose": true
+    },
+    "bounding_box_m": {
+        "x": 3.061877,
+        "y": 2.992496,
+        "z": 0.913554
+    },
+    "bounds_m": {
+        "x": {
+            "min": -1.582144,
+            "max": 1.479733
+        },
+        "y": {
+            "min": -1.496248,
+            "max": 1.496248
+        },
+        "z": {
+            "min": -0.229214,
+            "max": 0.68434
+        }
+    }
+}

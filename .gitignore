@@ -218,3 +218,91 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ==========================================
+# AeroTwin AI - .gitignore
+# ==========================================
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# Environment variables / API keys
+.env
+.env.*
+!.env.example
+secrets/
+
+# Jet Drone original CAD files
+*.stl
+*.3dxml
+*.CATPart
+*.CATProduct
+*.CATDrawing
+*.step
+*.stp
+*.iges
+*.igs
+*.obj
+
+# Original Jet Drone geometry folder
+aircraft/jetdrone/geometry/original/
+
+# OpenVSP temporary and generated files
+*.vsp3.bak
+*.vspaero
+*.history
+*.polar
+
+# Simulation outputs
+simulation/logs/
+simulation/outputs/
+*.ulg
+*.tlog
+*.bag
+*.log
+
+# Aerodynamics outputs
+aerodynamics/results/
+aerodynamics/outputs/
+
+# AI models and checkpoints
+ai/checkpoints/
+*.pt
+*.pth
+*.onnx
+*.safetensors
+
+# MATLAB temporary files
+*.asv
+slprj/
+*.slxc
+
+# Frontend
+node_modules/
+dist/
+build/
+.next/
+
+# IDE / OS files
+.vscode/
+.idea/
+.qodo/
+.DS_Store
+Thumbs.db
+
+# General generated files
+outputs/
+results/
+*.tmp
+*.bak
+*.cache
+

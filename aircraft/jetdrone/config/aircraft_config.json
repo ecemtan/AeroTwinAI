@@ -1,0 +1,51 @@
+
+{
+  "aircraft_id": "jetdrone",
+  "name": "Jet Drone",
+  "version": "0.1.0",
+  "geometry": {
+    "source": "CATIA",
+    "source_file": "jetDron.stl",
+    "units": "m",
+    "bounding_box_m": {
+      "x": 2.992496,
+      "y": 0.913554,
+      "z": 3.061877
+    },
+    "coordinate_system": {
+      "spanwise_axis": "X",
+      "vertical_axis": "Y",
+      "forward_direction": "+Z",
+      "vertical_positive_direction": null
+    }
+  },
+  "wing": {
+    "airfoil": "NACA4412",
+    "root_chord_m": 0.75,
+    "tip_chord_m": 0.35,
+    "half_span_m": 1.4,
+    "reference_area_m2": null,
+    "sweep_angle_deg": null
+  },
+  "tail": {
+    "airfoil": "NACA0012",
+    "area_m2": null
+  },
+  "propulsion": {
+    "type": "tilting_edf",
+    "motor_count": 4,
+    "maximum_thrust_n": null
+  },
+  "mass_properties": {
+    "mass_kg": null,
+    "center_of_gravity_m": null,
+    "inertia_tensor_kg_m2": null
+  },
+  "validation": {
+    "cad_units_confirmed": true,
+    "forward_direction_confirmed": true,
+    "vertical_direction_confirmed": false,
+    "mass_properties_confirmed": false,
+    "aerodynamic_reference_confirmed": false
+  }
+}

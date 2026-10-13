@@ -1,0 +1,40 @@
+{
+    "aircraft": "Jet Drone",
+    "source_file": "jetDron.stl",
+    "coordinate_system": {
+        "x": "unverified",
+        "y": "unverified",
+        "z": "unverified"
+    },
+    "source_units": "mm",
+    "output_units": "m",
+    "bounding_box_m": {
+        "x": 2.992496,
+        "y": 0.913554,
+        "z": 3.061877
+    },
+    "mesh_surface_area_m2": 13.452123,
+    "vertices": 281469,
+    "faces": 93823,
+    "bounding_box": {
+        "x": 2992.496,
+        "y": 913.554,
+        "z": 3061.877
+    },
+    "bounds": {
+        "x": {
+            "min": -1496.248,
+            "max": 1496.248
+        },
+        "y": {
+            "min": -229.214,
+            "max": 684.34
+        },
+        "z": {
+            "min": -1479.733,
+            "max": 1582.144
+        }
+    },
+    "mesh_surface_area": 13452123.063,
+    "watertight": false
+}
