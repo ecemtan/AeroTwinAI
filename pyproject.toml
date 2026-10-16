@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aerotwin"
+version = "0.1.0"
+description = "AeroTwin AI - aircraft engineering and digital twin platform (Cessna 172 reference)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "jsbsim>=1.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "httpx>=0.27",
+]
+# Legacy Jet Drone mesh scripts (aerodynamics/*.py using trimesh/matplotlib).
+legacy = [
+    "trimesh>=4",
+    "matplotlib>=3.8",
+]
+
+[tool.setuptools.packages.find]
+include = [
+    "core*",
+    "aerodynamics*",
+    "simulation*",
+    "validation*",
+    "backend*",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "jsbsim: requires the jsbsim Python package and its bundled c172p model",
+]
