@@ -1,0 +1,6 @@
+{
+  "active": ["c172"],
+  "legacy": {
+    "jetdrone": "GAYRETLI Jet Drone - legacy geometry work (aircraft/jetdrone, aerodynamics/*.py mesh scripts). Not served by the API."
+  }
+}

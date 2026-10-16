@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "aircraft_id": "c172",
+  "name": "Cessna 172",
+  "category": "single_engine_fixed_wing",
+  "description": "Reference aircraft for the AeroTwin AI MVP. Flight dynamics from the JSBSim c172p model; OpenVSP geometry not yet built.",
+  "variant_notes": "Flight dynamics use the JSBSim c172p model (172P). An OpenVSP geometry, when built, may represent a different variant (e.g. 172S). The two models must not be assumed to describe the same aircraft; differences are to be documented in aircraft/c172/README.md.",
+  "sources": [
+    {
+      "id": "jsbsim_c172p",
+      "title": "JSBSim c172p flight dynamics model (c172p.xml, rev 1.29), bundled with the jsbsim Python package",
+      "kind": "simulation_model",
+      "locator": "<jsbsim root>/aircraft/c172p/c172p.xml",
+      "notes": "File header: built from publicly available data, textbooks and guesses; educational use; validated at most to 'fly right'. Treat as a reference model, not as verified aircraft data."
+    },
+    {
+      "id": "jsbsim_eng_io320",
+      "title": "JSBSim engine definition eng_io320.xml and propeller prop_75in2f.xml",
+      "kind": "simulation_model",
+      "locator": "<jsbsim root>/engine/eng_io320.xml, <jsbsim root>/engine/prop_75in2f.xml"
+    },
+    {
+      "id": "lednicer_airfoil_usage",
+      "title": "D. Lednicer, The Incomplete Guide to Airfoil Usage",
+      "kind": "literature",
+      "locator": "https://m-selig.ae.illinois.edu/ads/aircraft.html",
+      "notes": "Secondary source. Not yet checked by the team."
+    },
+    {
+      "id": "cessna_172p_poh",
+      "title": "Cessna Model 172P Pilot's Operating Handbook",
+      "kind": "document",
+      "locator": null,
+      "notes": "Primary source to obtain. Values citing it are UNVERIFIED until the team checks the actual document."
+    }
+  ],
+  "flight_dynamics_model": {
+    "engine": "jsbsim",
+    "model_name": "c172p",
+    "variant": "172P",
+    "source": "jsbsim_c172p"
+  },
+  "geometry_model": {
+    "tool": "openvsp",
+    "file": null,
+    "variant": null,
+    "status": "missing",
+    "note": "No Cessna OpenVSP model yet. aircraft/jetdrone/geometry/processed/jetDrone.vsp3 is an OpenVSP default placeholder and must not be used."
+  },
+  "geometry": {
+    "wing_area": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 174.0, "source_unit": "ft2", "note": "metrics/wingarea"},
+    "wing_span": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 35.8, "source_unit": "ft", "note": "metrics/wingspan"},
+    "mean_aerodynamic_chord": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 4.9, "source_unit": "ft", "note": "metrics/chord"},
+    "htail_area": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 21.9, "source_unit": "ft2", "note": "metrics/htailarea"},
+    "htail_arm": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 15.7, "source_unit": "ft", "note": "metrics/htailarm"},
+    "vtail_area": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 16.5, "source_unit": "ft2", "note": "metrics/vtailarea"},
+    "vtail_arm": {"status": "missing", "note": "c172p.xml lists 0 ft, which is a placeholder, not a physical value."},
+    "aero_reference_point_x": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 43.2, "source_unit": "in", "frame": "structural", "note": "metrics/location[AERORP]/x"},
+    "aero_reference_point_z": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 59.4, "source_unit": "in", "frame": "structural", "note": "metrics/location[AERORP]/z"},
+    "wing_airfoil": {"status": "unverified", "source": "lednicer_airfoil_usage", "source_value": "NACA 2412"},
+    "fuselage_length": {"status": "missing"}
+  },
+  "mass_properties": {
+    "empty_mass": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 1500.0, "source_unit": "lbm", "note": "mass_balance/emptywt"},
+    "cg_x": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 41.0, "source_unit": "in", "frame": "structural", "note": "mass_balance/location[CG]/x (empty aircraft)"},
+    "cg_z": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 36.5, "source_unit": "in", "frame": "structural", "note": "mass_balance/location[CG]/z (empty aircraft)"},
+    "ixx": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 948.0, "source_unit": "slug*ft2", "note": "mass_balance/ixx"},
+    "iyy": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 1346.0, "source_unit": "slug*ft2", "note": "mass_balance/iyy"},
+    "izz": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 1967.0, "source_unit": "slug*ft2", "note": "mass_balance/izz"},
+    "max_takeoff_mass": {"status": "unverified", "source": "cessna_172p_poh", "source_value": 2400.0, "source_unit": "lbm", "note": "Commonly cited for the 172P; check against the POH before use."}
+  },
+  "propulsion": {
+    "engine_model": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": "eng_io320", "note": "JSBSim engine file used by c172p"},
+    "max_power": {"status": "reference_model", "source": "jsbsim_eng_io320", "source_value": 160.0, "source_unit": "hp", "note": "eng_io320.xml maxhp"},
+    "propeller_diameter": {"status": "reference_model", "source": "jsbsim_eng_io320", "source_value": 75.0, "source_unit": "in", "note": "prop_75in2f.xml diameter"},
+    "fuel_capacity_total": {"status": "reference_model", "source": "jsbsim_c172p", "source_value": 370.0, "source_unit": "lbm", "note": "2 tanks x 185 lbm capacity in c172p.xml"}
+  }
+}

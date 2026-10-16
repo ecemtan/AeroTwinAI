@@ -1,4 +1,7 @@
 
+> **Superseded:** This document describes the Jet Drone era (v0.1.0 draft).
+> The current architecture is [ARCHITECTURE.md](ARCHITECTURE.md). Kept for history.
+
 # AeroTwin AI — System Architecture
 
 Version: 0.1.0
