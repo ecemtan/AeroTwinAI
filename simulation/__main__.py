@@ -12,6 +12,7 @@ import math
 import sys
 from pathlib import Path
 
+from core.env import load_local_env
 from simulation.jsbsim_env import JSBSimUnavailableError, jsbsim_status
 from simulation.runner import SimulationError, run_simulation
 from simulation.schemas import SimulationRequest
@@ -55,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--no-trim", action="store_true")
     run.add_argument("--out", help="Write the SimulationResult JSON to this file")
     args = parser.parse_args(argv)
+    load_local_env()
     return _check() if args.command == "check" else _run(args)
 
 

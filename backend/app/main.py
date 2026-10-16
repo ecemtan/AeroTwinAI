@@ -11,9 +11,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app import API_VERSION
 from backend.app.routers import aircraft, health
 from backend.app.settings import get_settings
+from core.env import load_local_env
 
 
 def create_app() -> FastAPI:
+    load_local_env()
     app = FastAPI(
         title="AeroTwin AI API",
         version=API_VERSION,

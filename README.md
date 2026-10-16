@@ -1,196 +1,152 @@
 # AeroTwin AI
-### AI-Powered Aircraft Digital Twin, Aerodynamic Analysis & Flight Simulation Platform
+### AI-Powered Aerospace Engineering & Digital Twin Platform
 
 **From Aircraft Geometry to Intelligent Engineering Decisions.**
 
-AeroTwin AI is an AI-assisted aircraft engineering platform designed to connect 3D aircraft geometry, aerodynamic analysis, flight dynamics simulation, engineering validation, and intelligent design optimization within a unified workflow.
+AeroTwin AI connects parametric aircraft geometry, aerodynamic analysis, flight dynamics
+simulation, a simulation-based virtual twin, engineering validation and (later) AI-assisted
+analysis in one modular platform. The goal is a computable, traceable and verifiable link
+between an aircraft's geometry, physical properties, aerodynamic behaviour and flight performance.
 
-The platform aims to help engineers, researchers, and students evaluate aircraft configurations, understand flight performance, identify potential design limitations, and explore improvements supported by physics-based analysis.
-
-> **Project Status:** Active Development — MVP v0.1  
-> **Development Start:** October 13, 2026  
-> **Initial MVP Target:** November 11, 2026
+> **Status:** Active development — MVP v0.1
+> **Reference aircraft:** Cessna 172
+> **First demo:** November 15, 2026
 
 ---
 
-## 1. Project Vision
+## Quick start (Windows · PowerShell)
 
-Traditional aircraft engineering workflows often rely on multiple disconnected tools for CAD modeling, aerodynamic analysis, simulation, and performance evaluation.
+Full instructions and troubleshooting: [docs/SETUP.md](docs/SETUP.md).
 
-AeroTwin AI aims to integrate these processes into an accessible and intelligent engineering environment.
-
-The platform is designed to support:
-
-- Aircraft geometry inspection and parameter extraction
-- Aerodynamic performance analysis
-- Flight dynamics simulation
-- Engineering calculations and validation
-- AI-assisted anomaly detection
-- Explainable design improvement recommendations
-- Design variant comparison and optimization
-
-**Our goal is not simply to simulate aircraft, but to help engineers understand why an aircraft behaves as it does and how its design can be improved.**
-
-## 2. Reference Aircraft — GAYRETLİ Jet Drone
-
-The initial reference aircraft is the **GAYRETLİ Jet Drone**, an electric ducted fan (EDF) vertical take-off and landing (VTOL) unmanned aerial vehicle developed in an Istanbul Gelişim University research project.
-
-The available reference materials include CATIA-derived 3D geometry, STL and 3DXML files, and technical documentation.
-
-The reference aircraft provides a practical case study for developing and evaluating AeroTwin AI's engineering workflows.
-
-### Initial reference parameters
-
-| Parameter | Reference |
-|---|---|
-| Aircraft category | EDF VTOL UAV |
-| Main wing airfoil | NACA 4412 |
-| Tail airfoil | NACA 0012 |
-| Propulsion configuration | Four tiltable EDF motors |
-| CAD source | CATIA-derived 3D model |
-| Available geometry | STL, 3DXML |
-| Aerodynamic reference | University thesis and engineering calculations |
-
-Some published geometry parameters and calculated values require reconciliation. All unverified parameters will be tracked explicitly rather than treated as validated aircraft specifications.
-
-## 3. System Architecture
-
-```text
-Aircraft CAD / Geometry
-          |
-          v
-Geometry Processing & Parameter Extraction
-          |
-          v
-Aerodynamic Analysis (OpenVSP / VSPAERO)
-          |
-          +-----------------------------+
-          |                             |
-          v                             v
-Engineering Validation           Flight Dynamics
-(MATLAB / Python)                (JSBSim / PX4 / Gazebo)
-          |                             |
-          +--------------+--------------+
-                         |
-                         v
-              Engineering Data Layer
-                         |
-                         v
-               AI Analysis Engine
-                         |
-                         v
-        Diagnosis / Recommendations / Optimization
-                         |
-                         v
-              Physics-Based Revalidation
-                         |
-                         v
-                 AeroTwin AI Dashboard
+```powershell
+git clone https://github.com/ecemtan/AeroTwinAI.git
+cd AeroTwinAI
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+Copy-Item .env.example .env
+.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --reload --port 8000
 ```
 
-The architecture is modular and intended to support additional aircraft types beyond the initial Jet Drone reference model.
+In a second terminal:
 
-## 4. Technology Stack
+```powershell
+cd frontend
+npm ci
+npm run dev        # http://localhost:5173
+```
+
+## What works today
+
+| Module | State |
+|---|---|
+| `core/` — SI unit layer, coordinate frames, sourced data model, aircraft registry | working, tested |
+| `aircraft/c172/` — configuration traced to JSBSim `c172p`, each value tagged with its status | working; OpenVSP geometry **not built yet** |
+| `simulation/` — JSBSim `c172p` discovery and headless trimmed run (`python -m simulation run`) | working, tested |
+| `backend/` — FastAPI: `GET /health`, `GET /api/aircraft`, `GET /api/aircraft/{id}` | working, tested |
+| `frontend/` — React + TypeScript + Vite dashboard, Three.js viewer skeleton | builds; shows live backend data only |
+| `aerodynamics/` — OpenVSP/VSPAERO detection and service skeleton | refuses to run until VSPAERO and a Cessna geometry exist |
+| `validation/` — config vs JSBSim cross-check (`python -m validation.jsbsim_reference_check`) | working |
+
+The API contract is in [docs/API_CONTRACT.md](docs/API_CONTRACT.md) and the team plan in [docs/TEAM_TASKS.md](docs/TEAM_TASKS.md).
+
+## First demo scope (Nov 15, 2026)
+
+1. The web app opens and the user selects the Cessna 172.
+2. The 3D aircraft model is displayed.
+3. The user picks a flight scenario; JSBSim computes the flight dynamics.
+4. Speed, altitude and attitude are plotted and the 3D model follows the telemetry.
+5. VSPAERO aerodynamic results are shown as charts.
+6. The user reviews analysis and simulation results.
+
+Real-time control input, AI model training, physical sensor links, CFD and fully coupled
+aerodynamics–flight dynamics are out of scope for the first demo. Pre-recorded simulation
+data is always labelled as a replay.
+
+## Architecture
+
+```text
+User ─▶ React dashboard (Three.js) ─▶ FastAPI backend
+                                        ├─ Aircraft configuration ─▶ core / aircraft/
+                                        ├─ Aerodynamic analysis    ─▶ OpenVSP / VSPAERO
+                                        ├─ Flight simulation       ─▶ JSBSim (c172p)
+                                        └─ Validation              ─▶ reference data, numerical tests
+```
+
+Details, frames and units: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+**Architectural rule:** VSPAERO and JSBSim use different physical models. Their results are
+compared, never silently treated as one model. The OpenVSP geometry variant is not assumed to
+match the JSBSim `c172p` (172P) model; differences are documented in
+[aircraft/c172/README.md](aircraft/c172/README.md).
+
+## Technology stack
 
 | Layer | Technologies |
 |---|---|
-| Programming | Python, TypeScript |
-| Backend | FastAPI |
-| Frontend | React |
-| CAD and geometry | CATIA source data, OpenVSP |
-| Aerodynamics | VSPAERO |
-| Flight simulation | JSBSim, PX4, Gazebo |
-| Engineering validation | MATLAB, Simulink |
-| AI and optimization | Python, NumPy, SciPy, Optuna |
-| Data storage | JSON, CSV; PostgreSQL planned |
-| Development | Git, GitHub, VS Code |
-| Deployment | Docker planned |
+| Language | Python 3.12, TypeScript |
+| Backend | FastAPI, Pydantic |
+| Frontend | React, Vite, Three.js |
+| Aerodynamics | OpenVSP, VSPAERO, NumPy, SciPy |
+| Flight dynamics | JSBSim |
+| Tests | pytest, oxlint, TypeScript compiler |
+| Later | scikit-learn / PyTorch (AI work package), PostgreSQL, Docker |
 
-Technologies listed above represent the planned architecture. Individual integrations will be implemented and validated incrementally.
-
-## 5. AI Engineering Assistant
-
-The AI module is intended to assist with engineering interpretation rather than replace physical validation.
-
-Planned capabilities include:
-
-**Performance Analysis:** Interpret lift, drag, stability, flight speed, and energy-related outputs.
-
-**Anomaly Detection:** Identify inconsistent geometry, unusual simulation results, and potential design issues.
-
-**Explainable Recommendations:** Produce engineering suggestions with supporting calculations, assumptions, and evidence.
-
-**Design Optimization:** Explore selected geometry parameters and compare candidate configurations.
-
-**Revalidation:** Re-run applicable physics-based analyses before reporting whether an improvement is supported.
-
-AI-generated recommendations will be identified as hypotheses until supported by appropriate analysis or testing.
-
-## 6. Repository Structure
+## Repository structure
 
 ```text
 AeroTwinAI/
-├── docs/                  # Documentation and architecture
+├── core/                  # Shared models, SI units, coordinate frames, aircraft registry
 ├── aircraft/
-│   └── jetdrone/
-│       ├── geometry/      # Processed aircraft geometry
-│       └── config/        # Aircraft parameters
-├── aerodynamics/          # OpenVSP and VSPAERO
-├── simulation/            # JSBSim, PX4 and Gazebo
-├── validation/            # MATLAB and physics checks
-├── ai/                    # AI analysis and optimization
-├── backend/               # FastAPI services
+│   ├── registry.json      # Active vs legacy aircraft
+│   ├── c172/              # Active reference aircraft
+│   └── jetdrone/          # Legacy Jet Drone work (preserved)
+├── aerodynamics/          # OpenVSP/VSPAERO service (+ legacy Jet Drone mesh scripts)
+├── simulation/            # JSBSim runner, scenarios, telemetry
+├── validation/            # Reference comparisons
+├── backend/               # FastAPI application
 ├── frontend/              # React dashboard
-└── tests/                 # Automated tests
+├── ai/                    # Reserved for the post-demo AI work package
+├── tests/                 # pytest suite
+└── docs/                  # Setup, architecture, API contract, team tasks
 ```
 
-Original CAD files, proprietary models, large simulation outputs, and confidential engineering data are not included in the repository by default.
+## Team
 
-## 7. Development Roadmap
+| Role | Area |
+|---|---|
+| Project lead | Architecture, Cessna geometry, OpenVSP/VSPAERO, validation, integration |
+| Student 1 | Backend — FastAPI, data models, services, result management |
+| Student 2 | Frontend — React, Three.js viewer, dashboard, charts |
+| Student 3 | Flight simulation — JSBSim, scenarios, telemetry, simulation tests |
 
-| Phase | Period | Deliverable |
-|---|---|---|
-| Phase 1 | Oct 13–19, 2026 | Geometry inspection, environment setup, reference data |
-| Phase 2 | Oct 20–26, 2026 | Aerodynamic analysis and flight simulation baseline |
-| Phase 3 | Oct 27–Nov 2, 2026 | AI engineering analysis and initial web interface |
-| Phase 4 | Nov 3–9, 2026 | System integration, comparisons, and testing |
-| MVP Delivery | Nov 10–11, 2026 | Documentation, demonstration, AeroTwin AI v0.1 |
+Branch and pull request rules: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## 8. Development Team
+## Engineering principles
 
-The project is organized around four engineering responsibilities:
+1. **Physics before prediction** — physics-based computation first, AI estimation second.
+2. **Validation before claims** — unvalidated computations are not presented as reliable results.
+3. **Modular architecture** — every module is developed and tested independently.
+4. **Reproducibility** — the same inputs reproduce the same analysis.
+5. **Traceability** — sources, units, assumptions and model versions are recorded.
+6. **No fabricated engineering data** — missing parameters and results stay missing.
+7. **Safe development** — changes are tested and merged through reviewed pull requests.
 
-- **Project Lead & Software Integration:** System architecture, CAD workflow, backend, frontend, integration
-- **Flight Simulation Engineering:** PX4, Gazebo, JSBSim, flight scenarios and telemetry
-- **AI Engineering:** Data analysis, anomaly detection, explainable recommendations, optimization
-- **Aerodynamic & Mathematical Validation:** MATLAB, flight performance calculations, engineering verification
+## Legacy: GAYRETLİ Jet Drone
 
-Development uses feature branches and pull requests to keep the main branch stable.
+The project started with the GAYRETLİ Jet Drone, an EDF VTOL UAV from an Istanbul Gelişim
+University research project. That geometry work (CATIA-derived STL inspection and the
+CATIA → OpenVSP coordinate transform) is preserved under `aircraft/jetdrone/` and the mesh
+scripts in `aerodynamics/`, but it is not part of the active platform. See
+[aircraft/jetdrone/README.md](aircraft/jetdrone/README.md). Original CAD files are not
+included in the repository.
 
-## 9. Engineering Principles
+## Limitations
 
-AeroTwin AI development follows five core principles:
-
-1. **Physics before prediction** — Simulation and engineering equations provide the primary technical basis.
-2. **Traceable data** — Measurements, assumptions, and calculated values are documented.
-3. **Explainable AI** — Recommendations should include technical justification.
-4. **Reproducibility** — Analyses should record input parameters and execution conditions.
-5. **Modular architecture** — The platform should support different aircraft configurations and future integrations.
-
-## 10. Current Limitations
-
-AeroTwin AI is under active development.
-
-The initial MVP is not a certified flight dynamics environment, an airworthiness assessment system, or a substitute for experimental flight testing.
-
-CAD mesh geometry alone does not define aircraft mass properties, propulsion behavior, aerodynamic coefficients, or flight control dynamics. These elements must be modeled and validated separately.
-
-## 11. Project Repository
-
-GitHub: https://github.com/ecemtan/AeroTwinAI
+AeroTwin AI is not a certified flight dynamics environment, an airworthiness assessment
+system or a substitute for flight testing. The first release is a **simulation-based virtual
+twin**; it is not synchronised with a physical aircraft.
 
 ---
 
-**AeroTwin AI — From Aircraft Geometry to Intelligent Engineering Decisions.**
-
-*Developed for research, engineering experimentation, and AI-assisted aerospace innovation.*
+GitHub: https://github.com/ecemtan/AeroTwinAI

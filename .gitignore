@@ -306,3 +306,9 @@ results/
 *.bak
 *.cache
 
+
+# Run artefacts (analysis / simulation results written by the platform)
+data/runs/
+
+# Frontend local env files (frontend/.env.example is committed)
+frontend/.env.local

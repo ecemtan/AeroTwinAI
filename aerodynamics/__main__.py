@@ -6,12 +6,14 @@ import sys
 
 from aerodynamics.service import readiness
 from aerodynamics.vsp_env import openvsp_status
+from core.env import load_local_env
 
 
 def main() -> int:
     if sys.argv[1:] != ["check"]:
         print("usage: python -m aerodynamics check", file=sys.stderr)
         return 2
+    load_local_env()
     print(openvsp_status().model_dump_json(indent=2))
     problems = readiness("c172")
     if problems:

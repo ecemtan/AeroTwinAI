@@ -13,6 +13,7 @@ dependencies = [
     "scipy>=1.11",
     "pydantic>=2.6",
     "pydantic-settings>=2.2",
+    "python-dotenv>=1.0",
     "fastapi>=0.110",
     "uvicorn[standard]>=0.29",
     "jsbsim>=1.2",
