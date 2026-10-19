@@ -62,6 +62,18 @@ ax.set_title("AeroTwin AI - Jet Drone Coordinate System")
 # X ekseni boyunca bakıyoruz: ekranda Z yatay, Y dikey
 ax.view_init(elev=0, azim=-90, vertical_axis="y")
 ax.set_title("Jet Drone - Side View (Y Vertical)")
+ 
+# Jet Drone - Top View
+# CATIA: X = kanat açıklığı, Z = burun yönü
+# Yukarıdan bakış için X-Z düzlemini gösteriyoruz.
 
+ax.view_init(
+    elev=90,
+    azim=-90,
+    vertical_axis="y"
+)
+
+ax.set_title("Jet Drone - Top View (X-Z Plane)")
+ 
 plt.tight_layout()
 plt.show()
